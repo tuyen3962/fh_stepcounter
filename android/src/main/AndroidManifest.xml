@@ -1,0 +1,37 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.drag.ss.fh_stepcounter">
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <application>
+        <service android:name=".services.AlarmService" android:exported="true"></service>
+        <receiver android:name=".receivers.SensorAlarmBootReceiver"
+            android:directBootAware="true"
+
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <action android:name="android.intent.action.SENSOR_STEP_BROADCAST_STOP" />
+                <action android:name="SENSOR_STEP_BROADCAST"/>
+                <action android:name="SENSOR_STEP_BROADCAST_STOP"/>
+                <!--                <category android:name="android.intent.category.DEFAULT" />-->
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".receivers.AlarmReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <action android:name="android.intent.action.SENSOR_STEP_BROADCAST_STOP" />
+                <action android:name="SENSOR_STEP_BROADCAST"/>
+                <action android:name="SENSOR_STEP_BROADCAST_STOP"/>
+                <!--                <category android:name="android.intent.category.DEFAULT" />-->
+            </intent-filter>
+        </receiver>
+    </application>
+</manifest>
