@@ -30,15 +30,20 @@ public class FhStepcounterPlugin: NSObject, FlutterPlugin, FHStepCounterApi {
     }
     
     func onStart(initialTodayStep: Double) throws {
-        NSLog("onStart native plugin")
+        NSLog("onStart native plugin init step \(initialTodayStep)")
         var event = Dictionary<String, Any>()
         event["start"] = true
-        FHStepStepCounterUtil.setIsRecording(value: true)
-        FhStepcounterPlugin.qe?.emit(event: event)
+        event["onSensorChanged"] = Int(initialTodayStep)
         let now = Date()
-        
-        guard onResume() == true else{
-            hks.excute(withStart: now.startOfDate()!, end: now.endOfDate()!, completion: {
+        FHStepStepCounterUtil.setIsRecording(value: true)
+        FHStepStepCounterUtil.setInitialDate(date: now.timeIntervalSince1970)
+        FhStepcounterPlugin.qe?.emit(event: event)
+        guard onResume(initialTodayStep: initialTodayStep) == true else{
+            let rawData = FHStepStepCounterUtil.getPauseTime()
+            let startTime = rawData == 0 ? Date().timeIntervalSince1970 : rawData
+            NSLog("startTime \(startTime)")
+            let startWith = Date(timeIntervalSince1970: Double(startTime))
+            hks.excute(withStart: startWith, end: now.endOfDate()!, completion: {
                 result, error in if result != nil {
                     FHStepStepCounterUtil.setTotalStepToday(step: Int(result ?? 0))
                 }
@@ -53,15 +58,17 @@ public class FhStepcounterPlugin: NSObject, FlutterPlugin, FHStepCounterApi {
         return total
     }
     
-    func onResume() -> DarwinBoolean{
-        let pauseStep = FHStepStepCounterUtil.getOnPauseStep()
-        let todayStep = FHStepStepCounterUtil.getTotalStepToday()
+    func onResume(initialTodayStep: Double) -> Bool{
+        let isPause = FHStepStepCounterUtil.getPauseTime()
+        FHStepStepCounterUtil.setTotalStepToday(step: Int(initialTodayStep))
+        NSLog("onResume \(initialTodayStep)")
+        let todayStep = initialTodayStep
         let now = Date()
-        guard pauseStep?["time"] == nil else{
-            let date = Date(timeIntervalSince1970: Double(pauseStep!["time"]!))
+        if(isPause != 0){
+            let date = Date(timeIntervalSince1970: isPause)
             hks.excute(withStart: date, end: now.endOfDate()!, completion: {
                 result, error in if result != nil{
-                    FHStepStepCounterUtil.setTotalStepToday(step: todayStep + Int(result ?? 0))
+                    FHStepStepCounterUtil.setTotalStepToday(step:  Int(todayStep + (result ?? 0)))
                 }
             })
             return true
@@ -83,14 +90,15 @@ public class FhStepcounterPlugin: NSObject, FlutterPlugin, FHStepCounterApi {
         event["stop"] = true
         FHStepStepCounterUtil.clearData()
         FhStepcounterPlugin.qe?.emit(event: event)
+        
         hks.stop()
     }
     
     func pause() throws {
         var event = Dictionary<String, Any>()
         let currentStep = FHStepStepCounterUtil.getTotalStepToday()
+        FHStepStepCounterUtil.setPauseTime()
         event["onPauseStep"] = currentStep
-        FHStepStepCounterUtil.setOnPauseStep(step: currentStep)
         FhStepcounterPlugin.qe?.emit(event: event)
         hks.stop()
     }
@@ -110,11 +118,8 @@ public class FhStepcounterPlugin: NSObject, FlutterPlugin, FHStepCounterApi {
     
     func getPauseSteps() throws -> Int64 {
         NSLog("getPauseSteps native plugin")
-        let stepDictionary = FHStepStepCounterUtil.getOnPauseStep()
-        guard stepDictionary == nil else {
-            return Int64(stepDictionary!["step"]!)
-        }
-        return 0
+        let stepDictionary = FHStepStepCounterUtil.getPauseTime()
+        return Int64(stepDictionary)
         
     }
 }

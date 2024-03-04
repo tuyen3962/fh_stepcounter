@@ -8,14 +8,12 @@
 import Foundation
 
 struct FHStepStepCounterUtil{
-    static let KEY_HK_PAUSE = "hk_pasuse"
     static let TOTAL_STEP_TODAY = "total_step_today"
-    //static let INITIAL_DATE = "initial_date"
+    static let INITIAL_TIME = "initial_time"
     static let KEY_IS_RECORDING = "key_is_recording"
-   
-    static func getOnPauseStep() -> Dictionary<String, Int>?{
-        return UserDefaults.standard.object(forKey: KEY_HK_PAUSE) as? Dictionary<String, Int>
-    }
+    static let HK_IS_PAUSE = "hk_is_pause"
+    static let KEY_HK_PAUSE_TIME = "hk_pause_time"
+
     
     static func setTotalStepToday(step: Int){
         DispatchQueue.main.async {
@@ -30,18 +28,23 @@ struct FHStepStepCounterUtil{
        return UserDefaults.standard.integer(forKey: TOTAL_STEP_TODAY)
     }
     
-//    static func setInitialDate(date: Int?){
-//        UserDefaults.standard.set(date, forKey: INITIAL_DATE)
-//    }
-//
-//    static func getInitialDate() -> Int?{
-//        return UserDefaults.standard.object(forKey: INITIAL_DATE) as? Int
-//    }
+    static func setInitialDate(date: Double?){
+        DispatchQueue.main.async {
+            UserDefaults.standard.set(date, forKey: INITIAL_TIME)
+        }
+        
+    }
+
+    static func getInitialDate() -> Double?{
+        return UserDefaults.standard.object(forKey: INITIAL_TIME) as? Double
+    }
     
     static func clearData(){
-       // UserDefaults.standard.set(nil, forKey: INITIAL_DATE)
-        UserDefaults.standard.set(0, forKey: TOTAL_STEP_TODAY)
-        UserDefaults.standard.set(0, forKey: KEY_HK_PAUSE)
+        DispatchQueue.main.async {
+            UserDefaults.standard.set(0, forKey: INITIAL_TIME)
+            UserDefaults.standard.set(0, forKey: TOTAL_STEP_TODAY)
+            UserDefaults.standard.set(nil, forKey: HK_IS_PAUSE)
+    }
     }
     
     static func setIsRecording(value: Bool){
@@ -56,9 +59,14 @@ struct FHStepStepCounterUtil{
        return UserDefaults.standard.bool(forKey: KEY_IS_RECORDING)
     }
     
-    static func setOnPauseStep(step: Int){
-        var curentStep = Dictionary<String, Int>()
-        curentStep["time"] = Int(Date().timeIntervalSince1970)
-        curentStep["step"] = step
-        UserDefaults.standard.set(curentStep, forKey: KEY_HK_PAUSE)    }
+    static func getPauseTime() -> Double{
+        return UserDefaults.standard.double(forKey: KEY_HK_PAUSE_TIME)
+    }
+
+    static func setPauseTime(){
+        DispatchQueue.main.async {
+            let time = Date().timeIntervalSince1970
+            UserDefaults.standard.set(time, forKey: KEY_HK_PAUSE_TIME)
+        }
+    }
 }

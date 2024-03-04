@@ -2,18 +2,18 @@
 import 'package:flutter/foundation.dart';
 
 @immutable
-class FHStepEvent {
+class FHStepValue {
   final bool isRecording;
   final StepRecords? stepRecords;
   final StepToday? stepToday;
   final int currentPauseStep;
-  FHStepEvent(
+  FHStepValue(
       {this.stepToday,
       this.stepRecords,
       this.currentPauseStep = 0,
       this.isRecording = false});
 
-  FHStepEvent copyWith({
+  FHStepValue copyWith({
     bool? isSubscribed,
     bool? isClear,
     bool? isRecording,
@@ -21,7 +21,7 @@ class FHStepEvent {
     StepToday? stepToday,
     int? currentPauseStep = 0,
   }) {
-    return FHStepEvent(
+    return FHStepValue(
       isRecording: isRecording ?? this.isRecording,
       stepToday: stepToday ?? this.stepToday,
       stepRecords: stepRecords ?? this.stepRecords,
@@ -31,7 +31,7 @@ class FHStepEvent {
 
   @override
   String toString() {
-    return 'PawdayEvent(isRecording: $isRecording, stepRecords: $stepRecords, stepToday: $stepToday, currentPauseStep: $currentPauseStep)';
+    return 'PawdayValue(isRecording: $isRecording, stepRecords: $stepRecords, stepToday: $stepToday, currentPauseStep: $currentPauseStep)';
   }
 }
 

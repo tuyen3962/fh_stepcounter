@@ -34,15 +34,13 @@ class HealthKitService{
     
     
     func excute(withStart: Date, end: Date, completion: @escaping (Double?, Error?) -> Void){
-        let now = Date()
         let stepsQuantityType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
         let predicate = HKQuery.predicateForSamples(
                withStart: withStart,
                end: end,
                options: .strictStartDate
            )
-        
-        let observer = HKObserverQuery(sampleType: stepsQuantityType, predicate: nil){
+        observer = HKObserverQuery(sampleType: stepsQuantityType, predicate: nil){
             query, completionHandler, error in
             if let error = error{
                 FhStepcounterPlugin.qe?.emitError(exception: error)
@@ -50,11 +48,11 @@ class HealthKitService{
             }
             self.fetchStepCount(quantityType: stepsQuantityType, predicate: predicate, completion: completion)
         }
-        hk.execute(observer)
+        hk.execute(observer!)
     }
     
     private func fetchStepCount(quantityType: HKQuantityType, predicate: NSPredicate, completion: @escaping (Double?, Error?) -> Void){
-        let query = HKStatisticsQuery(
+        statistic = HKStatisticsQuery(
                quantityType: quantityType,
                quantitySamplePredicate: predicate,
                options: .cumulativeSum
@@ -63,10 +61,10 @@ class HealthKitService{
                    completion(0.0, err)
                    return
                }
-               NSLog(sum.description)
+               NSLog("semme \(sum.description)")
                completion(sum.doubleValue(for: HKUnit.count()), err)
            }
-           hk.execute(query)
+           hk.execute(statistic!)
     }
     
     

@@ -11,7 +11,7 @@ const EVENT_CHANNEL = "io.dragn/pawday/event_channel";
 class FHStepCounterImplement implements FHStepCounterPlatform {
   final FHStepCounterApi _api = FHStepCounterApi();
 
-  final FHStepEvent _event = FHStepEvent();
+  final FHStepValue _event = FHStepValue();
   EventChannel _eventChannel() {
     return const EventChannel(EVENT_CHANNEL);
   }
@@ -69,7 +69,7 @@ class FHStepCounterImplement implements FHStepCounterPlatform {
   }
 
   @override
-  Stream<FHStepEvent> stream() {
+  Stream<FHStepValue> stream() {
     return _eventChannel().receiveBroadcastStream().map((event) {
       final Map<dynamic, dynamic> map = event as Map<dynamic, dynamic>;
       log("event channel => $map");
@@ -87,7 +87,7 @@ class FHStepCounterImplement implements FHStepCounterPlatform {
         return _event.copyWith(isRecording: map["start"]);
       }
       if (map.containsKey("stop") && map["stop"] == true) {
-        return _event.copyWith(isRecording: false);
+        return FHStepValue();
       }
       if (map.containsKey("clearData") && map["clearData"] == true) {
         return _event.copyWith(isClear: true);
@@ -107,7 +107,11 @@ class FHStepCounterImplement implements FHStepCounterPlatform {
 
       if (map.containsKey("onPauseStep") && map["onPauseStep"] != null) {
         int pauseStep = map["onPauseStep"] as int;
-        return _event.copyWith(currentPauseStep: pauseStep);
+        return _event.copyWith(
+            stepToday: StepToday(
+                lastUpdated: DateTime.now().millisecondsSinceEpoch.toDouble(),
+                step: pauseStep),
+            currentPauseStep: pauseStep);
       }
       return _event;
     });

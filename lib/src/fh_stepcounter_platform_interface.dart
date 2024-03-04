@@ -67,7 +67,7 @@ abstract class FHStepCounterPlatform extends PlatformInterface {
     throw UnimplementedError('getPauseSteps() has not been implemented.');
   }
 
-  Stream<FHStepEvent> stream() {
+  Stream<FHStepValue> stream() {
     throw UnimplementedError('onListen() has not been implemented.');
   }
 }
