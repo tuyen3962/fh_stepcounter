@@ -113,6 +113,7 @@ class FHStepCounterImplement implements FHStepCounterPlatform {
       if (map.containsKey("onPauseStep") && map["onPauseStep"] != null) {
         int pauseStep = map["onPauseStep"] as int;
         _event = _event.copyWith(
+            isRecording: false,
             stepToday: StepToday(
                 lastUpdated: DateTime.now().millisecondsSinceEpoch.toDouble(),
                 step: pauseStep),
