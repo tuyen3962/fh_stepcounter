@@ -11,7 +11,7 @@ const EVENT_CHANNEL = "io.dragn/pawday/event_channel";
 class FHStepCounterImplement implements FHStepCounterPlatform {
   final FHStepCounterApi _api = FHStepCounterApi();
 
-  final FHStepValue _event = FHStepValue();
+  FHStepValue _event = FHStepValue();
   EventChannel _eventChannel() {
     return const EventChannel(EVENT_CHANNEL);
   }
@@ -74,23 +74,27 @@ class FHStepCounterImplement implements FHStepCounterPlatform {
       final Map<dynamic, dynamic> map = event as Map<dynamic, dynamic>;
       log("event channel => $map");
       if (map.containsKey("isRecording") && map["isRecording"] == true) {
-        return _event.copyWith(isRecording: true);
+        _event = _event.copyWith(isRecording: true);
+        return _event;
       }
       if (map.containsKey("onSensorChanged") &&
           (map["onSensorChanged"] != null || map["onSensorChanged"] != false)) {
-        return _event.copyWith(
+        _event = _event.copyWith(
             isRecording: true,
             stepToday: StepToday(
                 step: int.tryParse(map["onSensorChanged"].toString()) ?? 0));
+        return _event;
       }
       if (map.containsKey("start") && map["start"] == true) {
-        return _event.copyWith(isRecording: map["start"]);
+        _event = _event.copyWith(isRecording: map["start"]);
+        return _event;
       }
       if (map.containsKey("stop") && map["stop"] == true) {
         return FHStepValue();
       }
       if (map.containsKey("clearData") && map["clearData"] == true) {
-        return _event.copyWith(isClear: true);
+        _event = _event.copyWith(isClear: true);
+        return _event;
       }
       if (map.containsKey("getRecords") && map["getRecords"] != null) {
         final data = map["getRecords"];
@@ -102,16 +106,18 @@ class FHStepCounterImplement implements FHStepCounterPlatform {
 
         final step =
             StepRecords(lastUpdated: data["lastUpdated"], recorded: recordList);
-        return _event.copyWith(stepRecords: step);
+        _event = _event.copyWith(stepRecords: step);
+        return _event;
       }
 
       if (map.containsKey("onPauseStep") && map["onPauseStep"] != null) {
         int pauseStep = map["onPauseStep"] as int;
-        return _event.copyWith(
+        _event = _event.copyWith(
             stepToday: StepToday(
                 lastUpdated: DateTime.now().millisecondsSinceEpoch.toDouble(),
                 step: pauseStep),
             currentPauseStep: pauseStep);
+        return _event;
       }
       return _event;
     });

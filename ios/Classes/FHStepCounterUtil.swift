@@ -11,7 +11,6 @@ struct FHStepStepCounterUtil{
     static let TOTAL_STEP_TODAY = "total_step_today"
     static let INITIAL_TIME = "initial_time"
     static let KEY_IS_RECORDING = "key_is_recording"
-    static let HK_IS_PAUSE = "hk_is_pause"
     static let KEY_HK_PAUSE_TIME = "hk_pause_time"
 
     
@@ -43,7 +42,7 @@ struct FHStepStepCounterUtil{
         DispatchQueue.main.async {
             UserDefaults.standard.set(0, forKey: INITIAL_TIME)
             UserDefaults.standard.set(0, forKey: TOTAL_STEP_TODAY)
-            UserDefaults.standard.set(nil, forKey: HK_IS_PAUSE)
+            UserDefaults.standard.set(0, forKey: KEY_HK_PAUSE_TIME)
     }
     }
     

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:fh_stepcounter/fh_stepcounter.dart';
 import 'package:flutter/material.dart';
@@ -19,12 +20,13 @@ class _MyAppState extends State<MyApp> {
   int step = 0;
   bool isRecording = false;
   int pauseStep = 0;
-  StepRecords records = StepRecords();
-  final FHStepCounterController controller = FHStepCounterController();
 
+  final FHStepCounterController controller = FHStepCounterController();
+  late StreamSubscription<FHStepValue> streamController;
   @override
   void initState() {
-    controller.stream.asBroadcastStream().listen((event) {
+    streamController = controller.stream.asBroadcastStream().listen((event) {
+      log("event: => ${event.toString()}");
       if (event.stepToday != null) {
         setState(() {
           step = event.stepToday?.step?.toInt() ?? 0;
@@ -35,12 +37,6 @@ class _MyAppState extends State<MyApp> {
           isRecording = !isRecording;
         });
       }
-      if (event.stepRecords != null) {
-        setState(() {
-          records = event.stepRecords!;
-        });
-      }
-
       if (event.currentPauseStep != 0) {
         setState(() {
           pauseStep = event.currentPauseStep;
@@ -89,6 +85,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void dispose() {
     controller.dispose();
+    streamController.cancel();
     super.dispose();
   }
 
