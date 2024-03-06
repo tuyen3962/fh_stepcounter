@@ -52,10 +52,8 @@ public class FhStepcounterPlugin: NSObject, FlutterPlugin, FHStepCounterApi {
         }
     }
     
-    func getTodayStep() throws -> [String : Double]? {
-        var total = Dictionary<String, Double>()
-        total["step"] = Double(FHStepStepCounterUtil.getTotalStepToday())
-        return total
+    func getTodayStep() throws -> StepToday {
+        return StepToday(lastUpdated: nil , step:  Int64(FHStepStepCounterUtil.getTotalStepToday()))
     }
     
     func onResume(initialTodayStep: Double) -> Bool{
