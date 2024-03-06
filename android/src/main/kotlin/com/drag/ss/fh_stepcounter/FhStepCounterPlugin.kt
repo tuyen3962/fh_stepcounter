@@ -6,6 +6,7 @@
 package com.drag.ss.fh_stepcounter
 
 import FHStepCounterApi
+import StepToday
 import android.Manifest
 import android.app.ActivityManager
 import android.app.AlarmManager
@@ -199,21 +200,22 @@ class FhStepcounterPlugin: FlutterPlugin, FHStepCounterApi, ActivityAware {
     }
   }
 
-  override fun getTodayStep() : HashMap<String, Double>? {
+  override fun getTodayStep() : StepToday {
     activity?.activity?.let {
       try {
-        val event = HashMap<String, Any>()
-        val map: HashMap<String, Double> = HashMap()
-        map["lastUpdated"] = FHStepCounterUtil.getLastUpdatedTime(it).toDouble()
+        val lastUpdated = FHStepCounterUtil.getLastUpdatedTime(it).toDouble()
         val sensorResponse = SensorResponse()
         sensorResponse.recordedSteps = FHStepCounterUtil.getRecordedSteps(it) ?: ArrayList()
-        map["step"] = sensorResponse.getTodayStep().toDouble()
-        return map
+        val step = sensorResponse.getTodayStep()
+        return StepToday(
+          lastUpdated,
+          step
+        )
       } catch (e: java.lang.Exception) {
         throw e
       }
     }
-    return null
+    return StepToday(null, 0)
   }
 
   override fun getRecords() {

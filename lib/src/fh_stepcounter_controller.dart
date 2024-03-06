@@ -1,6 +1,7 @@
 import 'package:fh_stepcounter/fh_stepcounter.dart';
 import 'package:fh_stepcounter/src/fh_stepcounter_implement.dart';
 import 'package:fh_stepcounter/src/fh_stepcounter_platform_interface.dart';
+import 'package:fh_stepcounter/src/messages.g.dart';
 import 'package:flutter/foundation.dart';
 
 class FHStepCounterController extends ValueNotifier<FHStepValue> {

@@ -38,7 +38,7 @@ class FHStepCounterImplement implements FHStepCounterPlatform {
 
   @override
   Future<StepToday?> getTodayStep() async {
-    final res = await _api.getTodayStep() as StepToday?;
+    final res = await _api.getTodayStep();
     return res;
   }
 

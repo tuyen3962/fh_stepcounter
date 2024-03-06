@@ -10,7 +10,7 @@ abstract class FHStepCounterApi {
   void requestPermission();
   bool checkPermission();
   void onStart(double initialTodayStep);
-  Map<String, double>? getTodayStep();
+  StepToday getTodayStep();
   void getRecords();
   void stop();
   void pause();
@@ -18,4 +18,11 @@ abstract class FHStepCounterApi {
   void logout();
   bool isRecording();
   int getPauseSteps();
+}
+
+class StepToday {
+  final double? lastUpdated;
+  final int? step;
+
+  StepToday({this.lastUpdated, this.step});
 }

@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:fh_stepcounter/src/messages.g.dart';
 import 'package:flutter/foundation.dart';
 
 @immutable
@@ -47,13 +48,6 @@ class RecordItem {
   final double? value;
 
   RecordItem({this.time, this.value});
-}
-
-class StepToday {
-  final double? lastUpdated;
-  final int? step;
-
-  StepToday({this.lastUpdated, this.step});
 }
 
 class ServiceResponse {

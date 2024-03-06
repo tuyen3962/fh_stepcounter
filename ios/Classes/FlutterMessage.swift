@@ -38,12 +38,70 @@ private func nilOrValue<T>(_ value: Any?) -> T? {
   if value is NSNull { return nil }
   return value as! T?
 }
+
+/// Generated class from Pigeon that represents data sent in messages.
+struct StepToday {
+  var lastUpdated: Double? = nil
+  var step: Int64? = nil
+
+  static func fromList(_ list: [Any?]) -> StepToday? {
+    let lastUpdated: Double? = nilOrValue(list[0])
+    let step: Int64? = isNullish(list[1]) ? nil : (list[1] is Int64? ? list[1] as! Int64? : Int64(list[1] as! Int32))
+
+    return StepToday(
+      lastUpdated: lastUpdated,
+      step: step
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      lastUpdated,
+      step,
+    ]
+  }
+}
+private class FHStepCounterApiCodecReader: FlutterStandardReader {
+  override func readValue(ofType type: UInt8) -> Any? {
+    switch type {
+    case 128:
+      return StepToday.fromList(self.readValue() as! [Any?])
+    default:
+      return super.readValue(ofType: type)
+    }
+  }
+}
+
+private class FHStepCounterApiCodecWriter: FlutterStandardWriter {
+  override func writeValue(_ value: Any) {
+    if let value = value as? StepToday {
+      super.writeByte(128)
+      super.writeValue(value.toList())
+    } else {
+      super.writeValue(value)
+    }
+  }
+}
+
+private class FHStepCounterApiCodecReaderWriter: FlutterStandardReaderWriter {
+  override func reader(with data: Data) -> FlutterStandardReader {
+    return FHStepCounterApiCodecReader(data: data)
+  }
+
+  override func writer(with data: NSMutableData) -> FlutterStandardWriter {
+    return FHStepCounterApiCodecWriter(data: data)
+  }
+}
+
+class FHStepCounterApiCodec: FlutterStandardMessageCodec {
+  static let shared = FHStepCounterApiCodec(readerWriter: FHStepCounterApiCodecReaderWriter())
+}
+
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol FHStepCounterApi {
   func requestPermission() throws
   func checkPermission() throws -> Bool
   func onStart(initialTodayStep: Double) throws
-  func getTodayStep() throws -> [String: Double]?
+  func getTodayStep() throws -> StepToday
   func getRecords() throws
   func stop() throws
   func pause() throws
@@ -56,9 +114,10 @@ protocol FHStepCounterApi {
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
 class FHStepCounterApiSetup {
   /// The codec used by FHStepCounterApi.
+  static var codec: FlutterStandardMessageCodec { FHStepCounterApiCodec.shared }
   /// Sets up an instance of `FHStepCounterApi` to handle messages through the `binaryMessenger`.
   static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FHStepCounterApi?) {
-    let requestPermissionChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.fh_stepcounter.FHStepCounterApi.requestPermission", binaryMessenger: binaryMessenger)
+    let requestPermissionChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.fh_stepcounter.FHStepCounterApi.requestPermission", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       requestPermissionChannel.setMessageHandler { _, reply in
         do {
@@ -71,7 +130,7 @@ class FHStepCounterApiSetup {
     } else {
       requestPermissionChannel.setMessageHandler(nil)
     }
-    let checkPermissionChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.fh_stepcounter.FHStepCounterApi.checkPermission", binaryMessenger: binaryMessenger)
+    let checkPermissionChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.fh_stepcounter.FHStepCounterApi.checkPermission", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       checkPermissionChannel.setMessageHandler { _, reply in
         do {
@@ -84,7 +143,7 @@ class FHStepCounterApiSetup {
     } else {
       checkPermissionChannel.setMessageHandler(nil)
     }
-    let onStartChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.fh_stepcounter.FHStepCounterApi.onStart", binaryMessenger: binaryMessenger)
+    let onStartChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.fh_stepcounter.FHStepCounterApi.onStart", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       onStartChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -99,7 +158,7 @@ class FHStepCounterApiSetup {
     } else {
       onStartChannel.setMessageHandler(nil)
     }
-    let getTodayStepChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.fh_stepcounter.FHStepCounterApi.getTodayStep", binaryMessenger: binaryMessenger)
+    let getTodayStepChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.fh_stepcounter.FHStepCounterApi.getTodayStep", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       getTodayStepChannel.setMessageHandler { _, reply in
         do {
@@ -112,7 +171,7 @@ class FHStepCounterApiSetup {
     } else {
       getTodayStepChannel.setMessageHandler(nil)
     }
-    let getRecordsChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.fh_stepcounter.FHStepCounterApi.getRecords", binaryMessenger: binaryMessenger)
+    let getRecordsChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.fh_stepcounter.FHStepCounterApi.getRecords", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       getRecordsChannel.setMessageHandler { _, reply in
         do {
@@ -125,7 +184,7 @@ class FHStepCounterApiSetup {
     } else {
       getRecordsChannel.setMessageHandler(nil)
     }
-    let stopChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.fh_stepcounter.FHStepCounterApi.stop", binaryMessenger: binaryMessenger)
+    let stopChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.fh_stepcounter.FHStepCounterApi.stop", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       stopChannel.setMessageHandler { _, reply in
         do {
@@ -138,7 +197,7 @@ class FHStepCounterApiSetup {
     } else {
       stopChannel.setMessageHandler(nil)
     }
-    let pauseChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.fh_stepcounter.FHStepCounterApi.pause", binaryMessenger: binaryMessenger)
+    let pauseChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.fh_stepcounter.FHStepCounterApi.pause", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       pauseChannel.setMessageHandler { _, reply in
         do {
@@ -151,7 +210,7 @@ class FHStepCounterApiSetup {
     } else {
       pauseChannel.setMessageHandler(nil)
     }
-    let clearDataChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.fh_stepcounter.FHStepCounterApi.clearData", binaryMessenger: binaryMessenger)
+    let clearDataChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.fh_stepcounter.FHStepCounterApi.clearData", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       clearDataChannel.setMessageHandler { _, reply in
         do {
@@ -164,7 +223,7 @@ class FHStepCounterApiSetup {
     } else {
       clearDataChannel.setMessageHandler(nil)
     }
-    let logoutChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.fh_stepcounter.FHStepCounterApi.logout", binaryMessenger: binaryMessenger)
+    let logoutChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.fh_stepcounter.FHStepCounterApi.logout", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       logoutChannel.setMessageHandler { _, reply in
         do {
@@ -177,7 +236,7 @@ class FHStepCounterApiSetup {
     } else {
       logoutChannel.setMessageHandler(nil)
     }
-    let isRecordingChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.fh_stepcounter.FHStepCounterApi.isRecording", binaryMessenger: binaryMessenger)
+    let isRecordingChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.fh_stepcounter.FHStepCounterApi.isRecording", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       isRecordingChannel.setMessageHandler { _, reply in
         do {
@@ -190,7 +249,7 @@ class FHStepCounterApiSetup {
     } else {
       isRecordingChannel.setMessageHandler(nil)
     }
-    let getPauseStepsChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.fh_stepcounter.FHStepCounterApi.getPauseSteps", binaryMessenger: binaryMessenger)
+    let getPauseStepsChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.fh_stepcounter.FHStepCounterApi.getPauseSteps", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       getPauseStepsChannel.setMessageHandler { _, reply in
         do {

@@ -15,6 +15,55 @@ PlatformException _createConnectionError(String channelName) {
   );
 }
 
+class StepToday {
+  StepToday({
+    this.lastUpdated,
+    this.step,
+  });
+
+  double? lastUpdated;
+
+  int? step;
+
+  Object encode() {
+    return <Object?>[
+      lastUpdated,
+      step,
+    ];
+  }
+
+  static StepToday decode(Object result) {
+    result as List<Object?>;
+    return StepToday(
+      lastUpdated: result[0] as double?,
+      step: result[1] as int?,
+    );
+  }
+}
+
+class _FHStepCounterApiCodec extends StandardMessageCodec {
+  const _FHStepCounterApiCodec();
+  @override
+  void writeValue(WriteBuffer buffer, Object? value) {
+    if (value is StepToday) {
+      buffer.putUint8(128);
+      writeValue(buffer, value.encode());
+    } else {
+      super.writeValue(buffer, value);
+    }
+  }
+
+  @override
+  Object? readValueOfType(int type, ReadBuffer buffer) {
+    switch (type) {
+      case 128: 
+        return StepToday.decode(readValue(buffer)!);
+      default:
+        return super.readValueOfType(type, buffer);
+    }
+  }
+}
+
 class FHStepCounterApi {
   /// Constructor for [FHStepCounterApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
@@ -23,7 +72,7 @@ class FHStepCounterApi {
       : __pigeon_binaryMessenger = binaryMessenger;
   final BinaryMessenger? __pigeon_binaryMessenger;
 
-  static const MessageCodec<Object?> pigeonChannelCodec = StandardMessageCodec();
+  static const MessageCodec<Object?> pigeonChannelCodec = _FHStepCounterApiCodec();
 
   Future<void> requestPermission() async {
     const String __pigeon_channelName = 'dev.flutter.pigeon.fh_stepcounter.FHStepCounterApi.requestPermission';
@@ -96,7 +145,7 @@ class FHStepCounterApi {
     }
   }
 
-  Future<Map<String?, double?>?> getTodayStep() async {
+  Future<StepToday> getTodayStep() async {
     const String __pigeon_channelName = 'dev.flutter.pigeon.fh_stepcounter.FHStepCounterApi.getTodayStep';
     final BasicMessageChannel<Object?> __pigeon_channel = BasicMessageChannel<Object?>(
       __pigeon_channelName,
@@ -113,8 +162,13 @@ class FHStepCounterApi {
         message: __pigeon_replyList[1] as String?,
         details: __pigeon_replyList[2],
       );
+    } else if (__pigeon_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
     } else {
-      return (__pigeon_replyList[0] as Map<Object?, Object?>?)?.cast<String?, double?>();
+      return (__pigeon_replyList[0] as StepToday?)!;
     }
   }
 

@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:fh_stepcounter/fh_stepcounter.dart';
+import 'package:fh_stepcounter/src/messages.g.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 abstract class FHStepCounterPlatform extends PlatformInterface {

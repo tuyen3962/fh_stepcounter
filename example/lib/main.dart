@@ -20,6 +20,7 @@ class _MyAppState extends State<MyApp> {
   int step = 0;
   bool isRecording = false;
   int pauseStep = 0;
+  int totalToday = 0;
 
   final FHStepCounterController controller = FHStepCounterController();
   late StreamSubscription<FHStepValue> streamController;
@@ -82,6 +83,12 @@ class _MyAppState extends State<MyApp> {
     setState(() {});
   }
 
+  Future getTotalStep() async {
+    final model = await controller.getTodayStep();
+    totalToday = model?.step ?? 0;
+    setState(() {});
+  }
+
   @override
   void dispose() {
     controller.dispose();
@@ -107,6 +114,9 @@ class _MyAppState extends State<MyApp> {
                 child: isRecording
                     ? const Icon(Icons.stop)
                     : const Icon(Icons.play_arrow)),
+            const SizedBox(height: 16),
+            FloatingActionButton(
+                onPressed: getTotalStep, child: const Icon(Icons.download)),
           ],
         ),
         appBar: AppBar(
@@ -119,7 +129,8 @@ class _MyAppState extends State<MyApp> {
               Text('Granted permission: $isGranted'),
               Text("Step today: $step"),
               Text("Is recording: $isRecording"),
-              Text("Pause steps: $pauseStep")
+              Text("Pause steps: $pauseStep"),
+              Text("Total steps: $totalToday")
             ],
           ),
         ),

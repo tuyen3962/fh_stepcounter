@@ -41,12 +41,57 @@ class FlutterError (
   override val message: String? = null,
   val details: Any? = null
 ) : Throwable()
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class StepToday (
+  val lastUpdated: Double? = null,
+  val step: Long? = null
+
+) {
+  companion object {
+    @Suppress("UNCHECKED_CAST")
+    fun fromList(list: List<Any?>): StepToday {
+      val lastUpdated = list[0] as Double?
+      val step = list[1].let { if (it is Int) it.toLong() else it as Long? }
+      return StepToday(lastUpdated, step)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf<Any?>(
+      lastUpdated,
+      step,
+    )
+  }
+}
+@Suppress("UNCHECKED_CAST")
+private object FHStepCounterApiCodec : StandardMessageCodec() {
+  override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
+    return when (type) {
+      128.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          StepToday.fromList(it)
+        }
+      }
+      else -> super.readValueOfType(type, buffer)
+    }
+  }
+  override fun writeValue(stream: ByteArrayOutputStream, value: Any?)   {
+    when (value) {
+      is StepToday -> {
+        stream.write(128)
+        writeValue(stream, value.toList())
+      }
+      else -> super.writeValue(stream, value)
+    }
+  }
+}
+
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface FHStepCounterApi {
   fun requestPermission()
   fun checkPermission(): Boolean
   fun onStart(initialTodayStep: Double)
-  fun getTodayStep(): Map<String, Double>?
+  fun getTodayStep(): StepToday
   fun getRecords()
   fun stop()
   fun pause()
@@ -58,7 +103,7 @@ interface FHStepCounterApi {
   companion object {
     /** The codec used by FHStepCounterApi. */
     val codec: MessageCodec<Any?> by lazy {
-      StandardMessageCodec()
+      FHStepCounterApiCodec
     }
     /** Sets up an instance of `FHStepCounterApi` to handle messages through the `binaryMessenger`. */
     @Suppress("UNCHECKED_CAST")
