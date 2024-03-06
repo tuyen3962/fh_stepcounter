@@ -212,7 +212,7 @@ class FhStepcounterPlugin: FlutterPlugin, FHStepCounterApi, ActivityAware {
           step
         )
       } catch (e: java.lang.Exception) {
-        throw e
+        return StepToday(null, 0)
       }
     }
     return StepToday(null, 0)
