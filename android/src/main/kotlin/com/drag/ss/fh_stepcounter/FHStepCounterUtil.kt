@@ -141,7 +141,7 @@ class FHStepCounterUtil {
 
        fun getStepOnPause(context: Context) : Long{
            val sp = context.getSharedPreferences(
-               KEY_RN_SENSOR_STEP_FILE,
+               KEY_SENSOR_PAUSE,
                Context.MODE_PRIVATE
            )
            return  sp.getLong(KEY_SENSOR_PAUSE, 0L)

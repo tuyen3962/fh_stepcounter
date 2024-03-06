@@ -84,13 +84,6 @@ class FHStepCounterImplement implements FHStepCounterPlatform {
                 step: int.tryParse(map["onSensorChanged"].toString()) ?? 0));
         return _event;
       }
-      if (map.containsKey("start") && map["start"] == true) {
-        _event = _event.copyWith(isRecording: map["start"]);
-        return _event;
-      }
-      if (map.containsKey("stop") && map["stop"] == true) {
-        return FHStepValue();
-      }
       if (map.containsKey("clearData") && map["clearData"] == true) {
         _event = _event.copyWith(isClear: true);
         return _event;

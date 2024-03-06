@@ -319,7 +319,6 @@ class FhStepcounterPlugin: FlutterPlugin, FHStepCounterApi, ActivityAware {
       val sensorResponse = SensorResponse()
       sensorResponse.recordedSteps = FHStepCounterUtil.getRecordedSteps(context) ?: ArrayList()
       val todayStep = sensorResponse.getTodayStep()
-      Log.i("onPauseStep_todayStep", todayStep.toString())
       fhStepSensorListener.stopSensor()
       FHStepCounterUtil.setStepOnPause(context, todayStep)
       event["onPauseStep"] = todayStep
@@ -380,6 +379,8 @@ class FhStepcounterPlugin: FlutterPlugin, FHStepCounterApi, ActivityAware {
   override fun getPauseSteps(): Long {
     activity?.activity?.let {
         context ->
+      val a = FHStepCounterUtil.getStepOnPause(context)
+      Log.i("getStepOnPause", a.toString())
       return FHStepCounterUtil.getStepOnPause(context)
     }
     return 0L
