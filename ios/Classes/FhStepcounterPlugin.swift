@@ -85,10 +85,9 @@ public class FhStepcounterPlugin: NSObject, FlutterPlugin, FHStepCounterApi {
     
     func stop() throws {
         var event = Dictionary<String, Any>()
-        event["stop"] = true
+        event["isRecording"] = false
         FHStepStepCounterUtil.clearData()
         FhStepcounterPlugin.qe?.emit(event: event)
-        
         hks.stop()
     }
     
