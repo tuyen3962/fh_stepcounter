@@ -153,7 +153,7 @@ class FhStepcounterPlugin: FlutterPlugin, FHStepCounterApi, ActivityAware {
 
         val stepModel: HashMap<String, Double> = HashMap()
         stepModel["time"] = Date().time.toDouble()
-        stepModel["value"] = initialTodayStep.roundToInt().toDouble()
+        stepModel["value"] = initialTodayStep
         val recordedStep = ArrayList<HashMap<String, Double>>()
         recordedStep.add(stepModel)
         FHStepCounterUtil.setRecordedSteps(context, recordedStep)

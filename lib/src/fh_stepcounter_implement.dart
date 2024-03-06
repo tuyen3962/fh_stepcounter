@@ -73,14 +73,13 @@ class FHStepCounterImplement implements FHStepCounterPlatform {
     return _eventChannel().receiveBroadcastStream().map((event) {
       final Map<dynamic, dynamic> map = event as Map<dynamic, dynamic>;
       log("event channel => $map");
-      if (map.containsKey("isRecording") && map["isRecording"] == true) {
-        _event = _event.copyWith(isRecording: true);
+      if (map.containsKey("isRecording") && map["isRecording"] != null) {
+        _event = _event.copyWith(isRecording: map["isRecording"]);
         return _event;
       }
       if (map.containsKey("onSensorChanged") &&
           (map["onSensorChanged"] != null || map["onSensorChanged"] != false)) {
         _event = _event.copyWith(
-            isRecording: true,
             stepToday: StepToday(
                 step: int.tryParse(map["onSensorChanged"].toString()) ?? 0));
         return _event;

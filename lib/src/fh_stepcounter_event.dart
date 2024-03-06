@@ -20,7 +20,7 @@ class FHStepValue {
     bool? isRecording,
     StepRecords? stepRecords,
     StepToday? stepToday,
-    int? currentPauseStep = 0,
+    int? currentPauseStep,
   }) {
     return FHStepValue(
       isRecording: isRecording ?? this.isRecording,
