@@ -99,10 +99,13 @@ class FHStepCounterUtil {
 
        fun setIsRecording(context: Context, value: Boolean) {
            val sp = context.getSharedPreferences(KEY_RN_SENSOR_STEP_FILE, Context.MODE_PRIVATE)
+           val isRecording = sp.getBoolean(KEY_SENSOR_IS_RECORDING, false)
            sp.edit().putBoolean(KEY_SENSOR_IS_RECORDING, value).apply()
-           val event = HashMap<String ,Any>()
-           event["isRecording"] = value
-           FhStepcounterPlugin.queueEvent.emit(event)
+           if(isRecording != value){
+               val event = HashMap<String ,Any>()
+               event["isRecording"] = value
+               FhStepcounterPlugin.queueEvent.emit(event)
+           }
        }
 
        fun getIsEnabled(context: Context): Boolean {
