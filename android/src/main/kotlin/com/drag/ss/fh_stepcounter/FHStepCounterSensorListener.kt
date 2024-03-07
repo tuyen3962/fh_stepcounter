@@ -18,9 +18,8 @@ class FHStepCounterSensorListener(private val context: Context, val sensorEventI
         val SENSOR_STEP_BROADCAST_STOP = "SENSOR_STEP_BROADCAST_STOP"
         val ALARM_DELAY_IN_SECOND = 30
     }
-    private var mSensorManager: SensorManager =
-        (context.getSystemService(Context.SENSOR_SERVICE) as SensorManager);
-    private val mStepCounter: Sensor? = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+    private var mSensorManager: SensorManager? = null
+    private var mStepCounter: Sensor? = null
     private lateinit var notificationManager: NotificationManager
 
     var mSensor = Sensor.TYPE_STEP_COUNTER
@@ -42,11 +41,14 @@ class FHStepCounterSensorListener(private val context: Context, val sensorEventI
     }
 
     fun startSensor() {
-        mSensorManager.registerListener(this, mStepCounter, SensorManager.SENSOR_DELAY_FASTEST)
+        mSensorManager = (context.getSystemService(Context.SENSOR_SERVICE) as SensorManager)
+        mStepCounter = mSensorManager?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+        mSensorManager?.registerListener(this, mStepCounter, SensorManager.SENSOR_DELAY_FASTEST)
     }
 
     fun stopSensor() {
-        mSensorManager.unregisterListener(this, mStepCounter)
+        mSensorManager?.unregisterListener(this, mStepCounter)
+        mSensorManager = null
     }
 
 
@@ -108,7 +110,7 @@ class FHStepCounterSensorListener(private val context: Context, val sensorEventI
                 FhStepcounterPlugin.queueEvent.emit(event)
                 sensorEventInterface.onEvent(sensorResponse)
 
-            /// TODO: do not know what did below doing
+                /// TODO: do not know what did below doing
 //             // context - is the context you get from broadcastreceivers onReceive
 //                val rnApp: ReactApplication = mContext.getApplicationContext() as ReactApplication
 //                val outputData: WritableMap = Arguments.createMap()
@@ -130,7 +132,7 @@ class FHStepCounterSensorListener(private val context: Context, val sensorEventI
 //                        .emit("StepCounterEvent", outputData)
 //                }
                 // if (sensorEventInterface != null) {
-                 //   sensorEventInterface.onEvent(sensorResponse)
+                //   sensorEventInterface.onEvent(sensorResponse)
                 //}
                 Log.d(TAG, "Today step:$todayStep - lastUpdated:$lastUpdate")
             }

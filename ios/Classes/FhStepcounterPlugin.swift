@@ -45,7 +45,7 @@ public class FhStepcounterPlugin: NSObject, FlutterPlugin, FHStepCounterApi {
             let startWith = Date(timeIntervalSince1970: Double(startTime))
             hks.excute(withStart: startWith, end: now.endOfDate()!, completion: {
                 result, error in if result != nil {
-                    FHStepStepCounterUtil.setTotalStepToday(step: Int(result ?? 0))
+                    FHStepStepCounterUtil.setTotalStepToday(step: Int( initialTodayStep + (result ?? 0)))
                 }
             })
             return
@@ -66,7 +66,7 @@ public class FhStepcounterPlugin: NSObject, FlutterPlugin, FHStepCounterApi {
             let date = Date(timeIntervalSince1970: isPause)
             hks.excute(withStart: date, end: now.endOfDate()!, completion: {
                 result, error in if result != nil{
-                    FHStepStepCounterUtil.setTotalStepToday(step:  Int(todayStep + (result ?? 0)))
+                    FHStepStepCounterUtil.setTotalStepToday(step: Int(todayStep + (result ?? 0)))
                 }
             })
             return true

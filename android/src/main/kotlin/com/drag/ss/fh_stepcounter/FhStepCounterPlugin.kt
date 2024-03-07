@@ -286,6 +286,7 @@ class FhStepcounterPlugin: FlutterPlugin, FHStepCounterApi, ActivityAware {
       )
       logout()
       event["stop"] = true
+      fhStepSensorListener.stopSensor()
       queueEvent.emit(event)
     }
   }

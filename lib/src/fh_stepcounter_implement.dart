@@ -80,6 +80,7 @@ class FHStepCounterImplement implements FHStepCounterPlatform {
       if (map.containsKey("onSensorChanged") &&
           (map["onSensorChanged"] != null || map["onSensorChanged"] != false)) {
         _event = _event.copyWith(
+            isRecording: true,
             stepToday: StepToday(
                 step: int.tryParse(map["onSensorChanged"].toString()) ?? 0));
         return _event;

@@ -24,7 +24,9 @@ struct FHStepStepCounterUtil{
     }
     
     static func getTotalStepToday() -> Int{
-       return UserDefaults.standard.integer(forKey: TOTAL_STEP_TODAY)
+        let a = UserDefaults.standard.integer(forKey: TOTAL_STEP_TODAY)
+        NSLog("UserDefaults.standard.integer => \(a)")
+        return UserDefaults.standard.integer(forKey: TOTAL_STEP_TODAY)
     }
     
     static func setInitialDate(date: Double?){
@@ -43,8 +45,9 @@ struct FHStepStepCounterUtil{
             UserDefaults.standard.set(0, forKey: INITIAL_TIME)
             UserDefaults.standard.set(0, forKey: TOTAL_STEP_TODAY)
             UserDefaults.standard.set(0, forKey: KEY_HK_PAUSE_TIME)
+            UserDefaults.standard.set(false, forKey: KEY_IS_RECORDING)
     }
-    }
+}
     
     static func setIsRecording(value: Bool){
         var event = Dictionary<String,Any>()
