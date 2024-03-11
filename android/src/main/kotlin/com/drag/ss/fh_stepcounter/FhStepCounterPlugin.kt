@@ -16,7 +16,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.os.Build
+import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.drag.ss.fh_stepcounter.interfaces.SensorEventInterface
 import com.drag.ss.fh_stepcounter.models.SensorResponse
 import com.drag.ss.fh_stepcounter.receivers.AlarmReceiver
@@ -100,10 +103,26 @@ class FhStepcounterPlugin: FlutterPlugin, FHStepCounterApi, ActivityAware {
   override fun requestPermission() {
     val arrayString = arrayOf<String>(Manifest.permission.ACTIVITY_RECOGNITION)
     activity?.activity?.requestPermissions(arrayString, 0)
+    if(Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU){
+      this.activity?.activity?.startActivity(Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+    }
   }
 
+  @RequiresApi(Build.VERSION_CODES.S)
   override fun checkPermission(): Boolean {
-    return activity?.activity?.checkSelfPermission(Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED
+    activity?.activity?.let {
+      context ->
+      val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+      when {
+        alarmManager.canScheduleExactAlarms() -> {
+          return activity?.activity?.checkSelfPermission(Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED
+        }
+        else -> {
+          return false
+        }
+      }
+    }
+    return false
   }
 
 
