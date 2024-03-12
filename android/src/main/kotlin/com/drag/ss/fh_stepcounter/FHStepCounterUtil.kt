@@ -20,7 +20,7 @@ class FHStepCounterUtil {
        const val KEY_SENSOR_IS_ENABLED = "sensor_is_enabled"
        const val KEY_SENSOR_BG_ACTION = "sensor_bg_action"
        const val KEY_SENSOR_PAUSE = "sensor_pause"
-
+       
        // creating a new variable for gson.
        fun getLastUpdatedTime(context: Context): Long {
            val sp = context.getSharedPreferences(

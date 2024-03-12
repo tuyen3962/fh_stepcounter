@@ -108,20 +108,23 @@ class FhStepcounterPlugin: FlutterPlugin, FHStepCounterApi, ActivityAware {
     }
   }
 
-  @RequiresApi(Build.VERSION_CODES.S)
   override fun checkPermission(): Boolean {
-    activity?.activity?.let {
-      context ->
-      val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-      when {
-        alarmManager.canScheduleExactAlarms() -> {
+      activity?.activity?.let {
+          context ->
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+          when {
+            alarmManager.canScheduleExactAlarms() -> {
+              return activity?.activity?.checkSelfPermission(Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED
+            }
+            else -> {
+              return false
+            }
+          }
+        } else {
           return activity?.activity?.checkSelfPermission(Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED
         }
-        else -> {
-          return false
-        }
       }
-    }
     return false
   }
 
