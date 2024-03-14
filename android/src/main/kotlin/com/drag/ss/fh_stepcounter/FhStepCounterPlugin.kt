@@ -153,21 +153,22 @@ class FhStepcounterPlugin: FlutterPlugin, FHStepCounterApi, ActivityAware {
         intent.putExtra("enabled", true)
         intent.putExtra("delay", FHStepCounterSensorListener.ALARM_DELAY_IN_SECOND)
         intent.putExtra("repeat", true)
-        val pendingIntent = PendingIntent.getBroadcast(
-          context,
-          0,
-          intent,
-          PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-        val alarmManager =  context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//        val pendingIntent = PendingIntent.getBroadcast(
+//          context,
+//          0,
+//          intent,
+//          PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+//        )
+//        val alarmManager =  context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//
+//        alarmManager.setExactAndAllowWhileIdle(
+//          AlarmManager.RTC_WAKEUP,
+//          System.currentTimeMillis() + FHStepCounterSensorListener.ALARM_DELAY_IN_SECOND,
+//          pendingIntent
+//        )
+        context.sendBroadcast(intent)
 
-        alarmManager.setExactAndAllowWhileIdle(
-          AlarmManager.RTC_WAKEUP,
-          System.currentTimeMillis() + FHStepCounterSensorListener.ALARM_DELAY_IN_SECOND,
-          pendingIntent
-        )
         FHStepCounterUtil.setIsRecording(context, true)
-
         /// for reboot
         val filter = IntentFilter()
         filter.addAction(Intent.ACTION_BOOT_COMPLETED)
@@ -294,18 +295,20 @@ class FhStepcounterPlugin: FlutterPlugin, FHStepCounterApi, ActivityAware {
       intent.putExtra("repeat", false)
       intent.setAction(FHStepCounterSensorListener.SENSOR_STEP_BROADCAST_STOP)
       // setup broadcast receiver for step record:
-      val pendingIntent = PendingIntent.getBroadcast(
-        context,
-        0,
-        intent,
-        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-      )
-      val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-      alarmManager.setExactAndAllowWhileIdle(
-        AlarmManager.RTC_WAKEUP,
-        System.currentTimeMillis(),
-        pendingIntent
-      )
+      context.sendBroadcast(intent)
+//      val pendingIntent = PendingIntent.getBroadcast(
+//        context,
+//        0,
+//        intent,
+//        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+//      )
+//
+//      val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//      alarmManager.setExactAndAllowWhileIdle(
+//        AlarmManager.RTC_WAKEUP,
+//        System.currentTimeMillis(),
+//        pendingIntent
+//      )
       logout()
       event["stop"] = true
       fhStepSensorListener.stopSensor()
@@ -326,18 +329,20 @@ class FhStepcounterPlugin: FlutterPlugin, FHStepCounterApi, ActivityAware {
       intent.putExtra("repeat", false)
       intent.setAction(FHStepCounterSensorListener.SENSOR_STEP_BROADCAST_STOP)
       // setup broadcast receiver for step record:
-      val pendingIntent = PendingIntent.getBroadcast(
-        context,
-        0,
-        intent,
-        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-      )
-      val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-      alarmManager.setExactAndAllowWhileIdle(
-        AlarmManager.RTC_WAKEUP,
-        System.currentTimeMillis(),
-        pendingIntent
-      )
+      context.sendBroadcast(intent)
+
+//      val pendingIntent = PendingIntent.getBroadcast(
+//        context,
+//        0,
+//        intent,
+//        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+//      )
+//      val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//      alarmManager.setExactAndAllowWhileIdle(
+//        AlarmManager.RTC_WAKEUP,
+//        System.currentTimeMillis(),
+//        pendingIntent
+//      )
 
       val sensorResponse = SensorResponse()
       sensorResponse.recordedSteps = FHStepCounterUtil.getRecordedSteps(context) ?: ArrayList()

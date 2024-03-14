@@ -24,7 +24,7 @@ class SensorAlarmBootReceiver : BroadcastReceiver() {
                 service.setAction(intent.action)
                 service.putExtra("enabled", enabled)
                 // Get AlarmManager instance
-                val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                //val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
                 val recreateAlarmIntent = Intent(context, AlarmReceiver::class.java)
                 recreateAlarmIntent.setAction(FHStepCounterSensorListener.SENSOR_STEP_BROADCAST)
                 recreateAlarmIntent.putExtra("enabled", true)
@@ -40,27 +40,28 @@ class SensorAlarmBootReceiver : BroadcastReceiver() {
                     //  RESET/RECALL ALARM:
                     if (repeat) {
                         // setup broadcast receiver for step record:
-                        alarmManager.setExactAndAllowWhileIdle(
-                            AlarmManager.RTC_WAKEUP,
-                            System.currentTimeMillis() + delay * 1000L,
-                            recreateAlarmPendingIntent
-                        )
+//                        alarmManager.setExactAndAllowWhileIdle(
+//                            AlarmManager.RTC_WAKEUP,
+//                            System.currentTimeMillis() + delay * 1000L,
+//                            recreateAlarmPendingIntent
+//                        )
+                        context?.sendBroadcast(recreateAlarmIntent)
                     }
                     // CALLING SERVICE:
                     service.putExtra("enabled", enabled)
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        context.startForegroundService(service)
+                        context?.startForegroundService(service)
                     } else {
-                        context.startService(service)
+                        context?.startService(service)
                     }
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        context.startForegroundService(service)
+                        context?.startForegroundService(service)
                     } else {
-                        context.startService(service)
+                        context?.startService(service)
                     }
                     val notificationManager =
-                        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                        context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                     val notificationCompat = NotificationManagerCompat.from(context)
                     notificationManager.cancel(1)
                     notificationCompat.cancel(1)

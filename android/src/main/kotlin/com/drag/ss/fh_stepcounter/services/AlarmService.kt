@@ -6,6 +6,7 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import android.util.Log
+import androidx.core.app.NotificationManagerCompat
 import com.drag.ss.fh_stepcounter.FHStepCounterSensorListener
 import com.drag.ss.fh_stepcounter.FHStepCounterSensorListener.Companion.TAG
 import com.drag.ss.fh_stepcounter.FHStepCounterUtil
