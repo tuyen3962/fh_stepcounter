@@ -122,7 +122,11 @@ class FhStepcounterPlugin: FlutterPlugin, FHStepCounterApi, ActivityAware {
             }
           }
         } else {
-          return activity?.activity?.checkSelfPermission(Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED
+          return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            activity?.activity?.checkSelfPermission(Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED
+          } else {
+            false
+          }
         }
       }
     return false

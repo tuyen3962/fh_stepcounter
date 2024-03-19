@@ -20,14 +20,13 @@ class NotificationHandler(private val mContext: Context) {
     private var channelId = ""
 
     init {
-        //channelId = "TEAMSCARE"
-        this.channelId = createNotificationChannel("step_counter", "My Background Step Counter Service");
+        this.channelId = createNotificationChannel("step_counter", "Background Step Counter Service");
     }
 
     private fun createNotificationChannel(channelId: String, channelName: String): String {
         val channel = NotificationChannel(
             channelId,
-            channelName, NotificationManager.IMPORTANCE_NONE
+            channelName, NotificationManager.IMPORTANCE_LOW
         )
         channel.lightColor = Color.BLUE
         channel.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
@@ -67,7 +66,7 @@ class NotificationHandler(private val mContext: Context) {
                 .setCustomContentView(remoteViews)
                 .setOnlyAlertOnce(true)
                 .setShowWhen(false)
-                .setPriority(Notification.PRIORITY_HIGH) //        .setColor(ContextCompat.getColor(mContext, R.color.red))
+                .setPriority(notificationManager.importance) //        .setColor(ContextCompat.getColor(mContext, R.color.red))
                 .setSmallIcon(R.mipmap.ic_launcher_round) // we must add this to use custom notification
                 .setLargeIcon(largeIcon)
                 .build()
@@ -85,7 +84,7 @@ class NotificationHandler(private val mContext: Context) {
             .setCustomContentView(remoteViews)
             .setOnlyAlertOnce(true)
             .setShowWhen(false)
-            .setPriority(Notification.PRIORITY_HIGH)
+            .setPriority(notificationManager.importance)
             .setSmallIcon(R.mipmap.ic_launcher_round) // we must add this to use custom notification
             .setLargeIcon(largeIcon) //      .setLargeIcon(largeIcon) // we must add this to use custom notification
             .build()

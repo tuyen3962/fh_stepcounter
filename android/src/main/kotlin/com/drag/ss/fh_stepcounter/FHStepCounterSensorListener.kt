@@ -20,7 +20,6 @@ class FHStepCounterSensorListener(private val context: Context, val sensorEventI
     }
     private var mSensorManager: SensorManager? = null
     private var mStepCounter: Sensor? = null
-    private lateinit var notificationManager: NotificationManager
 
     var mSensor = Sensor.TYPE_STEP_COUNTER
 
