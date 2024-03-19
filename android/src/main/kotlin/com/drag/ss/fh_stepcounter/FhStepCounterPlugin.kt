@@ -60,6 +60,7 @@ class FhStepcounterPlugin: FlutterPlugin, FHStepCounterApi, ActivityAware {
   }
 
   override fun onDetachedFromActivity() {
+    stop()
     activity = null
     binding = null
     FHStepCounterApi.setUp(this.binding!!.binaryMessenger, null)
