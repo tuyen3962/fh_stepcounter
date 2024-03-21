@@ -105,7 +105,6 @@ class FHStepCounterSensorListener(private val context: Context, val sensorEventI
 
                 val event: HashMap<String, Any> = HashMap()
                 event["onSensorChanged"] = sensorResponse.getTodayStep()
-                Log.i("onSensorChanged2", sensorResponse.getTodayStep().toString())
                 FhStepcounterPlugin.queueEvent.emit(event)
                 sensorEventInterface.onEvent(sensorResponse)
 

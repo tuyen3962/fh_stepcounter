@@ -59,7 +59,7 @@ class NotificationHandler(private val mContext: Context) {
             val largeIcon =
                 BitmapFactory.decodeResource(mContext.resources, R.mipmap.ic_launcher_round)
             // setup broadcast receiver for step record:
-            remoteViews.setOnClickPendingIntent(R.id.tv_turn_off, pendingIntent)
+           // remoteViews.setOnClickPendingIntent(R.id.tv_turn_off, pendingIntent)
             return NotificationCompat.Builder(mContext, channelId)
                 .setOngoing(true)
                 .setCategory(Notification.CATEGORY_SERVICE)
@@ -77,7 +77,7 @@ class NotificationHandler(private val mContext: Context) {
         val largeIcon =
             BitmapFactory.decodeResource(mContext.resources, R.mipmap.ic_launcher_round)
         // setup broadcast receiver for step record:
-        remoteViews.setOnClickPendingIntent(R.id.tv_turn_off, pendingIntent)
+       // remoteViews.setOnClickPendingIntent(R.id.tv_turn_off, pendingIntent)
         return NotificationCompat.Builder(mContext, channelId)
             .setOngoing(true)
             .setCategory(Notification.CATEGORY_SERVICE)

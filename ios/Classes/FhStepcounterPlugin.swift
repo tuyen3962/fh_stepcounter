@@ -18,6 +18,7 @@ public class FhStepcounterPlugin: NSObject, FlutterPlugin, FHStepCounterApi {
         let plugin = FhStepcounterPlugin(qe: qe)
         FHStepCounterApiSetup.setUp(binaryMessenger: registrar.messenger(), api: plugin)
         registrar.publish(plugin)
+        registrar.addApplicationDelegate(plugin)
       }
     
     
@@ -30,7 +31,6 @@ public class FhStepcounterPlugin: NSObject, FlutterPlugin, FHStepCounterApi {
     }
     
     func onStart(initialTodayStep: Double) throws {
-        NSLog("onStart native plugin init step \(initialTodayStep)")
         var event = Dictionary<String, Any>()
         event["start"] = true
         event["onSensorChanged"] = Int(initialTodayStep)
@@ -41,7 +41,6 @@ public class FhStepcounterPlugin: NSObject, FlutterPlugin, FHStepCounterApi {
         guard onResume(initialTodayStep: initialTodayStep) == true else{
             let rawData = FHStepStepCounterUtil.getPauseTime()
             let startTime = rawData == 0 ? Date().timeIntervalSince1970 : rawData
-            NSLog("startTime \(startTime)")
             let startWith = Date(timeIntervalSince1970: Double(startTime))
             hks.excute(withStart: startWith, end: now.endOfDate()!, completion: {
                 result, error in if result != nil {
@@ -59,7 +58,6 @@ public class FhStepcounterPlugin: NSObject, FlutterPlugin, FHStepCounterApi {
     func onResume(initialTodayStep: Double) -> Bool{
         let isPause = FHStepStepCounterUtil.getPauseTime()
         FHStepStepCounterUtil.setTotalStepToday(step: Int(initialTodayStep))
-        NSLog("onResume \(initialTodayStep)")
         let todayStep = initialTodayStep
         let now = Date()
         if(isPause != 0){
@@ -105,8 +103,7 @@ public class FhStepcounterPlugin: NSObject, FlutterPlugin, FHStepCounterApi {
     }
     
     func logout() throws {
-        NSLog("logout native plugin")
-        print()
+        fatalError("Oops")
     }
     
     func isRecording() throws -> Bool {
@@ -114,9 +111,33 @@ public class FhStepcounterPlugin: NSObject, FlutterPlugin, FHStepCounterApi {
     }
     
     func getPauseSteps() throws -> Int64 {
-        NSLog("getPauseSteps native plugin")
         let stepDictionary = FHStepStepCounterUtil.getPauseTime()
         return Int64(stepDictionary)
         
+    }
+    
+    public func applicationWillTerminate(_ application: UIApplication) {
+        do {
+            try stop()
+            debugPrint("applicationWillTerminate")
+        }catch{
+            NSLog("applicationWillTerminate: \(error)")
+        }
+    }
+    
+    public func applicationDidBecomeActive(_ application: UIApplication) {
+        NSLog("applicationDidBecomeActive")
+    }
+
+    public func applicationWillResignActive(_ application: UIApplication) {
+        NSLog("applicationWillResignActive")
+    }
+
+    public func applicationDidEnterBackground(_ application: UIApplication) {
+        NSLog("applicationDidEnterBackground")
+    }
+
+    public func applicationWillEnterForeground(_ application: UIApplication) {
+        NSLog("applicationWillEnterForeground")
     }
 }

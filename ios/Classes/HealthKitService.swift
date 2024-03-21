@@ -23,8 +23,7 @@ class HealthKitService{
     
     func checkPermission() -> Bool{
         let stepCountType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
-        NSLog(hk.authorizationStatus(for: stepCountType).rawValue.description)
-            if HKHealthStore.isHealthDataAvailable(){
+        if HKHealthStore.isHealthDataAvailable(){
                 if(hk.authorizationStatus(for: stepCountType) == .sharingAuthorized){
                     return true
                 }
@@ -61,7 +60,6 @@ class HealthKitService{
                    completion(0.0, err)
                    return
                }
-               NSLog("semme \(sum.description)")
                completion(sum.doubleValue(for: HKUnit.count()), err)
            }
            hk.execute(statistic!)

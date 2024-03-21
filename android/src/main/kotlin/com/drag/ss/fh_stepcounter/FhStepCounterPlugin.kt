@@ -200,7 +200,6 @@ class FhStepcounterPlugin: FlutterPlugin, FHStepCounterApi, ActivityAware {
               val oldTotalStep: Long = FHStepCounterUtil.getTotalStep(context)
               FHStepCounterUtil.setLastUpdatedStep(context, sensorResponse.lastUpdatedStep)
               FHStepCounterUtil.setLastUpdatedTime(context, sensorResponse.lastUpdated)
-              Log.i("lastUpdated", sensorResponse.lastUpdated.toString())
               FHStepCounterUtil.setTotalStep(context, sensorResponse.totalStep)
               if (oldTotalStep != sensorResponse.totalStep) { // only add new record if we have new changes
                 FHStepCounterUtil.setRecordedSteps(context, sensorResponse.recordedSteps)
@@ -413,7 +412,6 @@ class FhStepcounterPlugin: FlutterPlugin, FHStepCounterApi, ActivityAware {
     activity?.activity?.let {
         context ->
       val a = FHStepCounterUtil.getStepOnPause(context)
-      Log.i("getStepOnPause", a.toString())
       return FHStepCounterUtil.getStepOnPause(context)
     }
     return 0L

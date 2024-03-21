@@ -25,7 +25,6 @@ struct FHStepStepCounterUtil{
     
     static func getTotalStepToday() -> Int{
         let a = UserDefaults.standard.integer(forKey: TOTAL_STEP_TODAY)
-        NSLog("UserDefaults.standard.integer => \(a)")
         return UserDefaults.standard.integer(forKey: TOTAL_STEP_TODAY)
     }
     
@@ -41,19 +40,16 @@ struct FHStepStepCounterUtil{
     }
     
     static func clearData(){
-        DispatchQueue.main.async {
-            UserDefaults.standard.set(0, forKey: INITIAL_TIME)
-            UserDefaults.standard.set(0, forKey: TOTAL_STEP_TODAY)
-            UserDefaults.standard.set(0, forKey: KEY_HK_PAUSE_TIME)
-            UserDefaults.standard.set(false, forKey: KEY_IS_RECORDING)
-    }
+        UserDefaults.standard.removeObject( forKey: INITIAL_TIME)
+        UserDefaults.standard.removeObject( forKey: TOTAL_STEP_TODAY)
+        UserDefaults.standard.removeObject( forKey: KEY_HK_PAUSE_TIME)
+        UserDefaults.standard.removeObject( forKey: KEY_IS_RECORDING)
 }
     
     static func setIsRecording(value: Bool){
         var event = Dictionary<String,Any>()
         event["isRecording"] = value
         FhStepcounterPlugin.qe?.emit(event: event)
-        NSLog("isRecording --> \(event.description)")
         UserDefaults.standard.set(value, forKey: KEY_IS_RECORDING)
     }
     

@@ -25,10 +25,8 @@ data class SensorResponse(
         todayEndOfDay.seconds = 0
 
             for (i in 0 until recordedSteps.size) {
-                Log.i("recordedSteps1", "${this.recordedSteps[i]}")
                 if (this.recordedSteps.isNotEmpty() && todayStartOfDay.time <= this.recordedSteps[i].getValue("time") && this.recordedSteps[i].getValue("time") <= todayEndOfDay.time
                 ) {
-                    Log.i("recordedSteps2", "${this.recordedSteps[i]}")
                     count += this.recordedSteps[i].getValue("value").toLong()
                 }
             }
