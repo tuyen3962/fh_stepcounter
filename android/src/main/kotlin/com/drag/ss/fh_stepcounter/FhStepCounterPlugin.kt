@@ -105,7 +105,10 @@ class FhStepcounterPlugin: FlutterPlugin, FHStepCounterApi, ActivityAware {
     val arrayString = arrayOf<String>(Manifest.permission.ACTIVITY_RECOGNITION)
     activity?.activity?.requestPermissions(arrayString, 0)
     if(Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU){
-      this.activity?.activity?.startActivity(Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+      val alarmManager = this.activity?.activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+      if (!alarmManager.canScheduleExactAlarms()) {
+        this.activity?.activity?.startActivity(Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+      }
     }
   }
 
