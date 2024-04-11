@@ -4,6 +4,8 @@ import android.app.ActivityManager
 import android.app.Notification
 import android.app.Service
 import android.content.Intent
+import android.content.pm.ServiceInfo
+import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationManagerCompat
@@ -29,7 +31,11 @@ class AlarmService : Service() {
         if (notificationHandler == null) {
             notificationHandler = NotificationHandler(this)
         }
-        startForeground(1, notificationHandler?.createSensorNotification())
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU){
+            startForeground(1, notificationHandler!!.createSensorNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING)
+        } else {
+            startForeground(1, notificationHandler?.createSensorNotification())
+        }
     }
 
     private fun checkServiceRunning(serviceName: String): HashMap<*, *> {
@@ -112,7 +118,11 @@ class AlarmService : Service() {
                                 if (FHStepSensorListener != null) {
                                     val notification: Notification? =
                                         notificationHandler?.createSensorNotification()
-                                    startForeground(1, notification)
+                                    if(Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU){
+                                        startForeground(1, notification!!, ServiceInfo.FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING)
+                                    } else {
+                                        startForeground(1, notification!!)
+                                    }
                                 }
                                 // setup alarm for foreground/background/app killed work:
                                 FHStepCounterUtil.setIsRecording(applicationContext, true)
@@ -121,7 +131,11 @@ class AlarmService : Service() {
                             override fun onFailed() {
                                 val notification: Notification? =
                                     notificationHandler?.createSensorNotification()
-                                startForeground(1, notification)
+                                if(Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU){
+                                    startForeground(1, notification!!, ServiceInfo.FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING)
+                                } else {
+                                    startForeground(1, notification!!)
+                                }
                                 FHStepCounterUtil.setIsRecording(applicationContext, true)
                             }
                         })
@@ -131,7 +145,11 @@ class AlarmService : Service() {
                     Log.d(TAG, "rnSensorListener co ne")
                     val notification: Notification? =
                         notificationHandler?.createSensorNotification()
-                    startForeground(1, notification)
+                    if(Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU){
+                        startForeground(1, notification!!, ServiceInfo.FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING)
+                    } else {
+                        startForeground(1, notification!!)
+                    }
                     FHStepCounterUtil.setIsRecording(applicationContext, true)
                 }
             } else {
