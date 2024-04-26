@@ -2,9 +2,20 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:fh_stepcounter/fh_stepcounter.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+@pragma('vm:entry-point')
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  print("firebaseMessagingBackgroundHandler: => ${message.data}");
+}
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
