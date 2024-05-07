@@ -62,8 +62,8 @@ class FhStepcounterPlugin: FlutterPlugin, FHStepCounterApi, ActivityAware {
   override fun onDetachedFromActivity() {
     stop()
     activity = null
-    binding = null
     FHStepCounterApi.setUp(this.binding!!.binaryMessenger, null)
+    binding = null
   }
 
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -76,7 +76,9 @@ class FhStepcounterPlugin: FlutterPlugin, FHStepCounterApi, ActivityAware {
 
   override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
     this.binding = null
-    FHStepCounterApi.setUp(this.binding!!.binaryMessenger, null)
+    if(this.binding != null) {
+      FHStepCounterApi.setUp(this.binding!!.binaryMessenger, null)
+    }
   }
 
   fun checkServiceRunning(serviceName: String): HashMap<String, Boolean> {
