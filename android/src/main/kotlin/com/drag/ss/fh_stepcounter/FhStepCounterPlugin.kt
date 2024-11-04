@@ -104,9 +104,13 @@ class FhStepcounterPlugin: FlutterPlugin, FHStepCounterApi, ActivityAware {
   }
 
   override fun requestPermission() {
-    val arrayString = arrayOf<String>(Manifest.permission.ACTIVITY_RECOGNITION)
+    val arrayString = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+      arrayOf<String>(Manifest.permission.ACTIVITY_RECOGNITION, Manifest.permission.POST_NOTIFICATIONS)
+    } else {
+      arrayOf<String>(Manifest.permission.ACTIVITY_RECOGNITION)
+    }
     activity?.activity?.requestPermissions(arrayString, 0)
-    if(Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU){
+    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
       val alarmManager = this.activity?.activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
       if (!alarmManager.canScheduleExactAlarms()) {
         this.activity?.activity?.startActivity(Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
@@ -118,6 +122,12 @@ class FhStepcounterPlugin: FlutterPlugin, FHStepCounterApi, ActivityAware {
       activity?.activity?.let {
           context ->
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+          val isGranted =  activity?.activity?.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+          if(!isGranted) {
+            return false
+          }
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
           when {
             alarmManager.canScheduleExactAlarms() -> {

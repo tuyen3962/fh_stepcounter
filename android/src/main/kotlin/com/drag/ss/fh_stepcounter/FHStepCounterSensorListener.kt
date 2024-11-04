@@ -75,7 +75,7 @@ class FHStepCounterSensorListener(private val context: Context, val sensorEventI
                 lastUpdate = curTime
                 //                recordedStep = Arguments.createArray();
                 isFineToUpdate = true
-            } else if (curTime - lastUpdate > 1000) {
+            } else if (curTime - lastUpdate > 100) {
                 // calculate foot step counter:
                 val deltaCount: Double
                 if (sensorEvent.values.get(0) < lastStep) { // sensor might have been reset

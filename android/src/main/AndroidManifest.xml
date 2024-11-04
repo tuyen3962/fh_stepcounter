@@ -6,11 +6,14 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <application>
-        <service android:name=".services.AlarmService" android:exported="true" android:foregroundServiceType="remoteMessaging"></service>
+        <service
+            android:name=".services.AlarmService"
+            android:exported="true"
+            android:foregroundServiceType="remoteMessaging" />
         <receiver android:name=".receivers.SensorAlarmBootReceiver"
             android:directBootAware="true"
-
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -20,6 +23,7 @@
                 <action android:name="SENSOR_STEP_BROADCAST"/>
                 <action android:name="SENSOR_STEP_BROADCAST_STOP"/>
                 <!--                <category android:name="android.intent.category.DEFAULT" />-->
+                <data android:scheme="stepcount" android:host="app" android:pathPrefix="/open"/>
             </intent-filter>
         </receiver>
         <receiver android:name=".receivers.AlarmReceiver"
@@ -31,6 +35,7 @@
                 <action android:name="android.intent.action.SENSOR_STEP_BROADCAST_STOP" />
                 <action android:name="SENSOR_STEP_BROADCAST"/>
                 <action android:name="SENSOR_STEP_BROADCAST_STOP"/>
+                <data android:scheme="stepcount" android:host="app" android:pathPrefix="/open"/>
                 <!--                <category android:name="android.intent.category.DEFAULT" />-->
             </intent-filter>
         </receiver>

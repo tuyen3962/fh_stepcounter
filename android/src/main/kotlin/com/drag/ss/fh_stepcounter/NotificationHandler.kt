@@ -9,10 +9,12 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.drag.ss.fh_stepcounter.models.SensorResponse
+import com.drag.ss.fh_stepcounter.services.AlarmService
 
 class NotificationHandler(private val mContext: Context) {
     private val notificationManager: NotificationManager = mContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -26,10 +28,10 @@ class NotificationHandler(private val mContext: Context) {
     private fun createNotificationChannel(channelId: String, channelName: String): String {
         val channel = NotificationChannel(
             channelId,
-            channelName, NotificationManager.IMPORTANCE_LOW
+            channelName, NotificationManager.IMPORTANCE_HIGH
         )
         channel.lightColor = Color.BLUE
-        channel.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
+        channel.lockscreenVisibility = Notification.FLAG_NO_CLEAR
         notificationManager.createNotificationChannel(channel)
         return channelId
     }
@@ -44,7 +46,7 @@ class NotificationHandler(private val mContext: Context) {
         sensorResponse.recordedSteps = FHStepCounterUtil.getRecordedSteps(mContext) ?: ArrayList()
         val footStepToday =
             String.format("%,d", sensorResponse.getTodayStep())
-        val uri = Uri.parse("teamscare://app/open/check_point")
+        val uri = Uri.parse("stepcount://app/open")
         val buttonIntent = Intent(Intent.ACTION_VIEW, uri)
         val pendingIntent = PendingIntent.getActivity(
             mContext,
@@ -60,16 +62,19 @@ class NotificationHandler(private val mContext: Context) {
                 BitmapFactory.decodeResource(mContext.resources, R.mipmap.ic_launcher_round)
             // setup broadcast receiver for step record:
            // remoteViews.setOnClickPendingIntent(R.id.tv_turn_off, pendingIntent)
-            return NotificationCompat.Builder(mContext, channelId)
+            val notification = NotificationCompat.Builder(mContext, channelId)
                 .setOngoing(true)
                 .setCategory(Notification.CATEGORY_SERVICE)
                 .setCustomContentView(remoteViews)
                 .setOnlyAlertOnce(true)
                 .setShowWhen(false)
+                .setContentIntent(pendingIntent)
                 .setPriority(notificationManager.importance) //        .setColor(ContextCompat.getColor(mContext, R.color.red))
                 .setSmallIcon(R.mipmap.ic_launcher_round) // we must add this to use custom notification
                 .setLargeIcon(largeIcon)
                 .build()
+            notification.flags = Notification.FLAG_NO_CLEAR
+            return notification
         }
         val remoteViews =
             RemoteViews(mContext.packageName, R.layout.custom_notification)
@@ -82,6 +87,7 @@ class NotificationHandler(private val mContext: Context) {
             .setOngoing(true)
             .setCategory(Notification.CATEGORY_SERVICE)
             .setCustomContentView(remoteViews)
+            .setContentIntent(pendingIntent)
             .setOnlyAlertOnce(true)
             .setShowWhen(false)
             .setPriority(notificationManager.importance)

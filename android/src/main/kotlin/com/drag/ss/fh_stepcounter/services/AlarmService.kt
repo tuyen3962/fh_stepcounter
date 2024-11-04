@@ -8,7 +8,6 @@ import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
-import androidx.core.app.NotificationManagerCompat
 import com.drag.ss.fh_stepcounter.FHStepCounterSensorListener
 import com.drag.ss.fh_stepcounter.FHStepCounterSensorListener.Companion.TAG
 import com.drag.ss.fh_stepcounter.FHStepCounterUtil
@@ -31,6 +30,7 @@ class AlarmService : Service() {
         if (notificationHandler == null) {
             notificationHandler = NotificationHandler(this)
         }
+
         if(Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU){
             startForeground(1, notificationHandler!!.createSensorNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING)
         } else {
